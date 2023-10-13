@@ -51,14 +51,16 @@ model Event {
     facility       String?
     location       String
     price          Float
+    people         String
     eventImg       String
     createdAt      DateTime         @default(now())
     updatedAt      DateTime         @updatedAt
     Review         Review[]
     Ticket         Ticket[]
-    Booking        Booking[]
     Organization   Organization?    @relation(fields: [organizationId], references: [id])
     AvailableEvent AvailableEvent[]
+
+    Booking Booking[]
 }
 
 model Ticket {
