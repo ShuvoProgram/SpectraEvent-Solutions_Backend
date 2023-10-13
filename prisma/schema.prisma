@@ -16,29 +16,58 @@ model User {
     middleName   String
     lastName     String
     profileImage String
-    email        String
-    role         USER_ROLES
-    conatctNo    String
+    email        String     @unique
+    password     String
+    role         USER_ROLES @default(customer)
+    contactNo    String
     gender       GENDER
     bloodGroup   String
+    address      String
     createdAt    DateTime   @default(now())
     updatedAt    DateTime   @updatedAt
-    Order        Order[]
+    booking      Booking[]
+    Review       Review[]
 
     @@map("users")
 }
 
-model Order {
-    id             String      @id @default(uuid())
-    orderedService Json
-    status         OrderStatus @default(pending)
-    userId         String
-    user           User        @relation(fields: [userId], references: [id])
+model Service {
+    id          String   @id @default(uuid())
+    title       String
+    category    String
+    description String
+    location    String
+    price       Int
+    serviceImg  String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    Review      Review[]
+}
+
+model Booking {
+    id        String        @id @default(uuid())
+    userId    String
+    serviceId String
+    date      DateTime
+    status    BookingStatus @default(pending)
+    user      User          @relation(fields: [userId], references: [id])
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@map("orders")
+    @@map("bookings")
+}
+
+model Review {
+    id        String   @id @default(uuid())
+    userId    String
+    serviceId String
+    rating    String
+    comment   String
+    user      User     @relation(fields: [userId], references: [id])
+    service   Service  @relation(fields: [serviceId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 enum USER_ROLES {
@@ -52,7 +81,7 @@ enum GENDER {
     female
 }
 
-enum OrderStatus {
+enum BookingStatus {
     pending
     delivered
 }

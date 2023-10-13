@@ -9,6 +9,7 @@ import { ZodError } from 'zod';
 import handleClientError from '../../errors/handleClientError';
 import handleZodError from '../../errors/handleZodError';
 import { IGenericErrorMessage } from '../../types/errorTypes';
+import ApiError from '../../errors/ApiError';
 
 const globalErrorHandler: ErrorRequestHandler = (
   error,
