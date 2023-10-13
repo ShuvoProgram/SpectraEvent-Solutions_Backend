@@ -31,41 +31,94 @@ model User {
     @@map("users")
 }
 
-model Service {
-    id          String   @id @default(uuid())
-    title       String
-    category    String
-    description String
-    location    String
-    price       Int
-    serviceImg  String
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    Review      Review[]
-}
-
-model Booking {
-    id        String        @id @default(uuid())
-    userId    String
-    serviceId String
-    date      DateTime
-    status    BookingStatus @default(pending)
-    user      User          @relation(fields: [userId], references: [id])
-
+model Organization {
+    id        String   @id @default(uuid())
+    name      String
+    image     String
+    event     Event[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    @@map("organization")
+}
+
+model Event {
+    id             String           @id @default(uuid())
+    title          String
+    organizationId String
+    description    String
+    duration       String
+    facility       String?
+    location       String
+    price          Float
+    eventImg       String
+    createdAt      DateTime         @default(now())
+    updatedAt      DateTime         @updatedAt
+    Review         Review[]
+    Ticket         Ticket[]
+    Booking        Booking[]
+    Organization   Organization?    @relation(fields: [organizationId], references: [id])
+    AvailableEvent AvailableEvent[]
+}
+
+model Ticket {
+    id       String @id @default(uuid())
+    name     String
+    facility String
+    price    Float
+    event    Event  @relation(fields: [eventId], references: [id])
+    eventId  String
+}
+
+model Booking {
+    id               String         @id @default(uuid())
+    userId           String
+    eventId          String
+    date             DateTime
+    status           BookingStatus  @default(pending)
+    user             User           @relation(fields: [userId], references: [id])
+    availableEventId String         @map("available_event_id")
+    availableEvent   AvailableEvent @relation(fields: [availableEventId], references: [id])
+    createdAt        DateTime       @default(now())
+    updatedAt        DateTime       @updatedAt
+    Event            Event          @relation(fields: [eventId], references: [id])
+
     @@map("bookings")
+}
+
+model TimeSlots {
+    id             String           @id @default(uuid())
+    slotTime       DateTime         @map("slot_time")
+    createdAt      DateTime         @default(now())
+    updatedAt      DateTime         @updatedAt
+    AvailableEvent AvailableEvent[]
+}
+
+model AvailableEvent {
+    id             String    @id @default(uuid())
+    slotDate       DateTime  @map("slot_date")
+    availableSeats Int       @map("available_seats")
+    isBooked       Boolean   @default(false) @map("is_booked")
+    eventId        String    @map("service_id")
+    event          Event     @relation(fields: [eventId], references: [id])
+    slotId         String    @map("slot_id")
+    slot           TimeSlots @relation(fields: [slotId], references: [id])
+    createdAt      DateTime  @default(now())
+    updatedAt      DateTime  @updatedAt
+    Booking        Booking[]
+
+    @@unique([slotId, eventId, slotDate])
+    @@map("available_services")
 }
 
 model Review {
     id        String   @id @default(uuid())
     userId    String
-    serviceId String
+    eventId   String
     rating    String
     comment   String
     user      User     @relation(fields: [userId], references: [id])
-    service   Service  @relation(fields: [serviceId], references: [id])
+    event     Event    @relation(fields: [eventId], references: [id])
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }

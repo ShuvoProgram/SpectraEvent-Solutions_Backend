@@ -5,6 +5,7 @@ import validator from 'validator';
 import config from "../../../config";
 import bcrypt from 'bcrypt';
 import ApiError from "../../../errors/ApiError";
+import { IUploadFile } from "../../../types/file";
 
 const createUser = async (data: User): Promise<User> => {
   const {firstName, middleName, lastName, role, gender, address, bloodGroup, contactNo , email, password, profileImage} = data;
