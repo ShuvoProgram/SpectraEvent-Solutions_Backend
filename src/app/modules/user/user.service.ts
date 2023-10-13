@@ -59,6 +59,9 @@ return result;
 }
 
 const updateUser = async (id: string, payload: Partial<User>): Promise<User | null> => {
+   if(payload.password) {
+    payload.password = await bcrypt.hash(payload.password, Number(config.bcrypt_salt_rounds))
+  }
   const result = await prisma.user.update({
     where: {
       id,

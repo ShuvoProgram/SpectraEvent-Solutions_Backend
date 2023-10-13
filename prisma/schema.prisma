@@ -42,6 +42,10 @@ model Organization {
     @@map("organization")
 }
 
+//     Ticket         Ticket[]
+//     Booking        Booking[]
+//     AvailableEvent AvailableEvent[]
+//     Review         Review[]
 model Event {
     id             String           @id @default(uuid())
     title          String
@@ -55,12 +59,11 @@ model Event {
     eventImg       String
     createdAt      DateTime         @default(now())
     updatedAt      DateTime         @updatedAt
+    Organization   Organization?    @relation(fields: [organizationId], references: [id])
+    Booking        Booking[]
+    AvailableEvent AvailableEvent[]
     Review         Review[]
     Ticket         Ticket[]
-    Organization   Organization?    @relation(fields: [organizationId], references: [id])
-    AvailableEvent AvailableEvent[]
-
-    Booking Booking[]
 }
 
 model Ticket {

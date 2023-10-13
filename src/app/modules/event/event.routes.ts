@@ -16,3 +16,5 @@ router.get('/:id', EventController.getSingleEvent);
 router.patch('/:id', validateRequest(EventValidation.updateEventZodSchema),auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN), EventController.updateEvent);
 
 router.delete('/:id', auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN), EventController.deleteEvent);
+
+export const EventRoutes = router;

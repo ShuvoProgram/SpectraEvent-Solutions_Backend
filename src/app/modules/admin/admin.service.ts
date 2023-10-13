@@ -5,6 +5,7 @@ import validator from 'validator';
 import prisma from '../../../utils/prisma';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
+import config from '../../../config';
 
 const createAdmin= async (data: User): Promise<User> => {
    const {firstName, middleName, lastName, role, gender, address, bloodGroup, contactNo , email, password, profileImage} = data;
@@ -59,6 +60,9 @@ const updateAdmin = async (
   id: string,
   payload: Partial<User>
 ): Promise<User | null> => {
+  if(payload.password) {
+    payload.password = await bcrypt.hash(payload.password, Number(config.bcrypt_salt_rounds))
+  }
   const result = await prisma.user.update({
     where: {
       id,
