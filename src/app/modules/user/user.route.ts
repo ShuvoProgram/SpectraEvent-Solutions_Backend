@@ -2,6 +2,8 @@ import express from 'express';
 import auth from '../../middlewares/auth';
 import { ENUM_USER_ROLE } from '../../../enums/role';
 import { UserController } from './user.controller';
+import validateRequest from '../../middlewares/validateRequest';
+import { UserValidation } from './user.validation';
 
 const router = express.Router();
 
@@ -21,7 +23,7 @@ router.get(
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  // validateRequest(UserValidation.updateUserZodSchema),
+  validateRequest(UserValidation.updateUserZodSchema),
   UserController.updateUser
 );
 router.delete(

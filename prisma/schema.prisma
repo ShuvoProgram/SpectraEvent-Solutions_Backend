@@ -71,7 +71,7 @@ model Review {
 }
 
 enum USER_ROLES {
-    superadmin
+    super_admin
     admin
     customer
 }
