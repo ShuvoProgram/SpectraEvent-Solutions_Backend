@@ -5,9 +5,25 @@ import { IPaginationOptions } from "../../../types/paginationType";
 import { paginationHelpers } from "../../../helpers/paginationHelpers";
 import { eventFieldSearchableFields, eventRelationalFields, eventRelationalFieldsMapper } from "./event.constant";
 
-const createEvent = async (data: Event): Promise<Event> => {
+const createEvent = async (data: Event, Id: string): Promise<Event> => {
+  let { title, organizationId, isBooked, description, eventDate, facility, location, price, maxCapacity, availableSeats, eventImg, adminId } = data;
+
+  adminId = Id;
   const result = await prisma.event.create({
-    data,
+    data: {
+      title,
+      organizationId,
+      isBooked,
+      description,
+      eventDate,
+      facility,
+      location,
+      price,
+      maxCapacity,
+      availableSeats,
+      eventImg,
+      adminId
+    },
     include: {
       Organization: true
     }
@@ -69,8 +85,8 @@ const getAllEvents = async (
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
         : {
-            createdAt: 'desc',
-          },
+          createdAt: 'desc',
+        },
   });
   const total = await prisma.event.count({
     where: whereConditions,

@@ -75,28 +75,35 @@ model Organization {
 
 // Event
 model Event {
-    id               String          @id @default(uuid())
-    title            String
-    organizationId   String
-    isBooked         Boolean         @default(false)
-    description      String
-    eventDate        String
-    facility         String?
-    location         String
-    price            Int
-    maxCapacity      Int             @default(0)
-    availableSeats   Int
-    eventImg         String
-    createdAt        DateTime        @default(now())
-    updatedAt        DateTime        @updatedAt
-    Organization     Organization    @relation(fields: [organizationId], references: [id])
-    Booking          Booking[]
-    Review           Review[]
-    Favorite         Favorite?
-    AvailableEvent   AvailableEvent? @relation(fields: [availableEventId], references: [id])
-    availableEventId String?
-    Admin            Admin?          @relation(fields: [adminId], references: [id])
-    adminId          String?
+    id             String       @id @default(uuid())
+    title          String
+    organizationId String
+    isBooked       Boolean      @default(false)
+    description    String
+    eventDate      String
+    facility       String?
+    location       String
+    price          Int
+    maxCapacity    Int          @default(0)
+    availableSeats Int
+    eventImg       String
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @updatedAt
+    Organization   Organization @relation(fields: [organizationId], references: [id])
+    Booking        Booking[]
+    Review         Review[]
+    Favorite       Favorite?
+    Admin          Admin?       @relation(fields: [adminId], references: [id])
+    adminId        String?
+    Ticket         Ticket[]
+}
+
+model Ticket {
+    id       String @id @default(uuid())
+    eventId  String @unique
+    quantity Int
+    price    Int
+    event    Event  @relation(fields: [eventId], references: [id])
 }
 
 model AvailableEvent {
@@ -105,26 +112,22 @@ model AvailableEvent {
     organization   Organization @relation(fields: [organizationId], references: [id])
     createdAt      DateTime     @default(now())
     updatedAt      DateTime     @updatedAt
-    Booking        Booking[]
-    Event          Event[]
 
     @@unique([organizationId])
     @@map("available_events")
 }
 
 model Booking {
-    id               String         @id @default(uuid())
-    userId           String         @unique
-    eventId          String         @unique
-    date             DateTime
-    status           BookingStatus  @default(pending)
-    user             User           @relation(fields: [userId], references: [id])
-    availableEventId String         @map("available_event_id")
-    availableEvent   AvailableEvent @relation(fields: [availableEventId], references: [id])
-    createdAt        DateTime       @default(now())
-    updatedAt        DateTime       @updatedAt
-    Event            Event          @relation(fields: [eventId], references: [id])
-    Payment          Payment?
+    id        String        @id @default(uuid())
+    userId    String        @unique
+    eventId   String        @unique
+    date      DateTime
+    status    BookingStatus @default(pending)
+    user      User          @relation(fields: [userId], references: [id])
+    createdAt DateTime      @default(now())
+    updatedAt DateTime      @updatedAt
+    Event     Event         @relation(fields: [eventId], references: [id])
+    Payment   Payment?
 
     @@map("bookings")
 }

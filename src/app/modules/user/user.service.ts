@@ -90,11 +90,45 @@ const getMyProfile = async (userId: string, userRole: string): Promise<User | nu
   return result;
 };
 
+const updateMyProfile = async (
+  userId: string,
+  userRole: "customer",
+  payload: Partial<User>
+): Promise<User | null> => {
+  const user = await prisma.user.findFirst({
+    where: {
+      id: userId,
+      role: userRole
+    }
+  })
+  const {firstName, middleName, lastName, profileImage, contactNo, dateOfBirth, bio, gender, bloodGroup, address} = payload;
+
+  const result = await prisma.user.update({
+    where: {
+      id: user?.id
+    },
+    data: {
+       firstName,
+        middleName,
+        lastName,
+        profileImage,
+        contactNo,
+        dateOfBirth,
+        bio,
+        gender,
+        bloodGroup,
+        address
+    }
+  })
+  return result;
+}
+
 export const UserService = {
   createUser,
   getAllUsers,
   getSingleUser,
   updateUser,
   deleteUser,
-  getMyProfile
+  getMyProfile,
+  updateMyProfile
 }

@@ -8,7 +8,8 @@ import pick from '../../../utils/pick';
 import { eventFilterableFields } from './event.constant';
 
 const createEvent = catchAsync(async (req: Request, res: Response) => {
-  const result = await EventService.createEvent(req.body);
+  const adminId = req?.user?.userId
+  const result = await EventService.createEvent(req.body, adminId);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

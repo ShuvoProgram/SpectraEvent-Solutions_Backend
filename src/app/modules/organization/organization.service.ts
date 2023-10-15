@@ -3,8 +3,8 @@ import prisma from "../../../utils/prisma";
 import ApiError from "../../../errors/ApiError";
 import httpStatus from "http-status";
 
-const createOrganization = async (data: Prisma.OrganizationCreateInput): Promise<Organization> => { // Use Prisma types
-  const { name } = data;
+const createOrganization = async (data: Organization, Id: string): Promise<Organization> => { // Use Prisma types
+  let { name, image, adminId } = data;
   const isAlreadyExist = await prisma.organization.findFirst({
     where: { name: name }
   });
@@ -12,9 +12,13 @@ const createOrganization = async (data: Prisma.OrganizationCreateInput): Promise
   if (isAlreadyExist) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Organization already exists");
   }
-
+  adminId = Id;
   const result = await prisma.organization.create({
-    data: data,
+   data: {
+    adminId,
+    image,
+    name
+   }
   });
   return result;
 }

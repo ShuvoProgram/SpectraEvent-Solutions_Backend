@@ -7,7 +7,8 @@ import sendResponse from '../../../utils/sendResponse';
 
 const createOrganize = catchAsync(async (req: Request, res: Response) => {
   const { ...organizationData } = req.body;
-  const result = await OrganizationService.createOrganization(organizationData);
+  const adminId = req?.user?.userId;
+  const result = await OrganizationService.createOrganization(organizationData, adminId);
 
   sendResponse(res, {
     success: true,
