@@ -8,6 +8,7 @@ import { ReviewRoutes } from '../modules/review/review.routes';
 import { FaqRoutes } from '../modules/faq/faq.routes';
 import { BookingRoutes } from '../modules/booking/booking.routes';
 import { FavoriteRoutes } from '../modules/favorite/favorite.routes';
+import { BlogRoutes } from '../modules/blog/blog.routes';
 
 const router = express.Router();
 
@@ -47,6 +48,10 @@ const moduleRoutes = [
   {
     path: '/favorite',
     routes: FavoriteRoutes
+  },
+  {
+    path: '/blog',
+    routes: BlogRoutes
   }
 ]
 

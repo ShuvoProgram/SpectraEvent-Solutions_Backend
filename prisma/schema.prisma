@@ -153,6 +153,8 @@ model Review {
     event     Event    @relation(fields: [eventId], references: [id])
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    Blog      Blog?    @relation(fields: [blogId], references: [id])
+    blogId    String?
 
     @@map("reviews")
 }
@@ -194,6 +196,7 @@ model Blog {
     updatedAt   DateTime @updatedAt
     Admin       Admin?   @relation(fields: [adminId], references: [id])
     adminId     String?
+    review      Review[]
 
     @@map("blogs")
 }
