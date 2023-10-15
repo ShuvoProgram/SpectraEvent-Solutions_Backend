@@ -7,6 +7,7 @@ import { EventRoutes } from '../modules/event/event.routes';
 import { ReviewRoutes } from '../modules/review/review.routes';
 import { FaqRoutes } from '../modules/faq/faq.routes';
 import { BookingRoutes } from '../modules/booking/booking.routes';
+import { FavoriteRoutes } from '../modules/favorite/favorite.routes';
 
 const router = express.Router();
 
@@ -42,6 +43,10 @@ const moduleRoutes = [
   {
     path: '/booking',
     routes: BookingRoutes
+  },
+  {
+    path: '/favorite',
+    routes: FavoriteRoutes
   }
 ]
 
