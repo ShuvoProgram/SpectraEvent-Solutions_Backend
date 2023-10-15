@@ -1,6 +1,7 @@
 import jwt, { JwtPayload, Secret, verify } from 'jsonwebtoken';
 import config from '../config';
 import httpStatus from 'http-status';
+import ApiError from '../errors/ApiError';
 
 const secret: string = config.jwt.secret || '';
 

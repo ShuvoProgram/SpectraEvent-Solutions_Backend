@@ -79,11 +79,26 @@ const getMyProfile = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.userId;
+  const userRole = req.user?.role;
+  const updateData = req.body;
+
+  const result = await AdminService.updateMyProfile(userId, userRole, updateData);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Update Admin Profile successfully",
+    data: result,
+  });
+})
+
 export const AdminController = {
   createAdmin,
   getAllAdmins,
   getSingleAdmin,
   updateAdmin,
   deleteAdmin,
-  getMyProfile
+  getMyProfile,
+  updateMyProfile
 };

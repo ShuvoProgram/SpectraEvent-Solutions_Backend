@@ -8,26 +8,29 @@ const createEventZodSchema = z.object({
     organizationId: z.string({
       required_error: 'OrganizationId is required'
     }),
-    location: z.string({
-      required_error: 'location is required ',
-    }),
-    price: z.number({
-      required_error: 'Password is required ',
-    }),
-    people: z.string({
-      required_error: 'people is required ',
-    }),
-    duration: z.string({
+     description: z.string({
       required_error: 'duration is required ',
     }),
-    description: z.string({
-      required_error: 'duration is required ',
+     eventDate: z.string({
+      required_error: 'Event Date is required ',
     }),
     facility: z
       .string({
         required_error: 'facility is required ',
       })
       .optional(),
+    location: z.string({
+      required_error: 'location is required ',
+    }),
+    price: z.number({
+      required_error: 'Password is required ',
+    }),
+    maxCapacity: z.number({
+      required_error: 'maxCapacity is required ',
+    }),
+   availableSeats: z.number({
+    required_error: 'availableSeat is required ',
+   }),
     eventImg: z
       .string({
         required_error: 'image is required ',
@@ -44,26 +47,29 @@ const updateEventZodSchema = z.object({
     organizationId: z.string({
       required_error: 'OrganizationId is required'
     }),
-    location: z.string({
-      required_error: 'location is required ',
-    }),
-    price: z.number({
-      required_error: 'Password is required ',
-    }),
-    people: z.string({
-      required_error: 'people is required ',
-    }),
-    duration: z.string({
+     description: z.string({
       required_error: 'duration is required ',
     }),
-    description: z.string({
-      required_error: 'duration is required ',
+     eventDate: z.string({
+      required_error: 'Event Date is required ',
     }),
     facility: z
       .string({
         required_error: 'facility is required ',
       })
       .optional(),
+    location: z.string({
+      required_error: 'location is required ',
+    }),
+    price: z.number({
+      required_error: 'Password is required ',
+    }),
+    maxCapacity: z.number({
+      required_error: 'maxCapacity is required ',
+    }),
+   availableSeat: z.number({
+    required_error: 'availableSeat is required ',
+   }),
     eventImg: z
       .string({
         required_error: 'image is required ',

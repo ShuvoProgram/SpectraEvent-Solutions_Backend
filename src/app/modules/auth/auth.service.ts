@@ -20,10 +20,16 @@ const loginUser = async (data: ILoginUser): Promise<ILoginUserResponse> => {
     },
   });
 
-  if(!user) {
+  const admin = await prisma.admin.findUnique({
+    where: {
+      email: email
+    }
+  })
+
+   if(user?.email === email) {
+    if(!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
   }
-
   const isPasswordMatched = await bcrypt.compare(password, user.password);
 
   if(!isPasswordMatched) {
@@ -46,7 +52,32 @@ const loginUser = async (data: ILoginUser): Promise<ILoginUserResponse> => {
     accessToken,
     refreshToken
   }
-}
+  } else {
+    if(!admin) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Admin does not exist');
+  }
+   const isPasswordMatched = await bcrypt.compare(password, admin.password);
+
+  if(!isPasswordMatched) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Password mismatch');
+  }
+
+  const {id: userId, role} = admin;
+  const accessToken = jwtHelpers.createToken(
+    {userId, role},
+    config.jwt.secret as Secret,
+    config.jwt.expires_in as string
+  );
+
+  const refreshToken = jwtHelpers.createToken(
+    {userId, role},
+    config.jwt.refresh_secret as Secret,
+    config.jwt.refresh_expires_in as string
+  )
+  return {
+    accessToken,
+    refreshToken
+  }}}
 
 const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   let verifiedToken = null;

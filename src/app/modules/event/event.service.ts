@@ -15,30 +15,30 @@ const createEvent = async (data: Event): Promise<Event> => {
   return result;
 }
 
-const getAllEvents = async(
-  filter: IEventFilterRequest,
+const getAllEvents = async (
+  filters: IEventFilterRequest,
   options: IPaginationOptions
-): Promise<Event[] | null> => {
-  const {limit, page, skip} = paginationHelpers.calculatePagination(options);
-  const {searchTerm, ...filterData} = filter;
+): Promise<Event[] | any> => {
+  const { limit, page, skip } = paginationHelpers.calculatePagination(options);
+  const { searchTerm, ...filterData } = filters;
 
-  const andCondition = [];
+  const andConditions = [];
 
-  if(searchTerm) {
-    andCondition.push({
+  if (searchTerm) {
+    andConditions.push({
       OR: eventFieldSearchableFields.map(field => ({
         [field]: {
           contains: searchTerm,
-          mode: 'insensitive'
+          mode: 'insensitive',
         },
-      }))
-    })
+      })),
+    });
   }
 
-  if(Object.keys(filterData).length > 0) {
-    andCondition.push({
+  if (Object.keys(filterData).length > 0) {
+    andConditions.push({
       AND: Object.keys(filterData).map(key => {
-        if(eventRelationalFields.includes(key)) {
+        if (eventRelationalFields.includes(key)) {
           return {
             [eventRelationalFieldsMapper[key]]: {
               id: (filterData as any)[key],
@@ -47,30 +47,31 @@ const getAllEvents = async(
         } else {
           return {
             [key]: {
-              equals: (filterData as any)[key]
-            }
-          }
+              equals: (filterData as any)[key],
+            },
+          };
         }
-      })
-    })
+      }),
+    });
   }
 
-  const whereConditions: Prisma.EventWhereInput = 
-  andCondition.length > 0 ? {AND: andCondition} : {};
+  const whereConditions: Prisma.EventWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
   const result = await prisma.event.findMany({
     include: {
-      AvailableEvent: true,
       Review: true
     },
     where: whereConditions,
     skip,
     take: limit,
-    orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : {
-      createdAt: 'desc',
-    }
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : {
+            createdAt: 'desc',
+          },
   });
-
   const total = await prisma.event.count({
     where: whereConditions,
   });
@@ -79,11 +80,12 @@ const getAllEvents = async(
     meta: {
       total,
       page,
-      limit
+      limit,
     },
-    data: result
-  }
-}
+    data: result,
+  };
+};
+
 
 const getSingleService = async (id: string): Promise<Event | null> => {
   const result = await prisma.event.findUnique({

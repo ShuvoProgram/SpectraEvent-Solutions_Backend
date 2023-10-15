@@ -1,4 +1,4 @@
-import { USER_ROLES, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import prisma from "../../../utils/prisma";
 import httpStatus from "http-status";
 import validator from 'validator';
@@ -80,7 +80,7 @@ const deleteUser = async (id: string): Promise<User | null> => {
   return result;
 };
 
-const getMyProfile = async (userId: string, userRole: USER_ROLES): Promise<User | null> => {
+const getMyProfile = async (userId: string, userRole: string): Promise<User | null> => {
   const result = await prisma.user.findUnique({
     where: {
       id: userId,

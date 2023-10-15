@@ -5,8 +5,8 @@ const createReviewZodSchema = z.object({
     userId: z.string({
       required_error: "User ID required"
     }),
-    serviceId: z.string({
-      required_error: "Service ID required"
+    eventId: z.string({
+      required_error: "Event ID required"
     }),
     rating: z.string({
       required_error: "Rating is required"
@@ -22,8 +22,8 @@ const updateReviewZodSchema = z.object({
     userId: z.string({
       required_error: "User ID required"
     }),
-    serviceId: z.string({
-      required_error: "Service ID required"
+    eventId: z.string({
+      required_error: "Event ID required"
     }),
     rating: z.string({
       required_error: "Rating is required"

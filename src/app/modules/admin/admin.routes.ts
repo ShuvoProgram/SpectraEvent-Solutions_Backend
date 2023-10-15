@@ -10,16 +10,23 @@ const router = express.Router();
 router.post(
   "/create-admin",
   validateRequest(AdminValidation.createAdminZodSchema),
-  auth(ENUM_USER_ROLE.SUPER_ADMIN),
+  // auth(ENUM_USER_ROLE.SUPER_ADMIN),
   AdminController.createAdmin
 );
 
 
 router.get(
-    '/profile',
+    '/admin-profile',
     auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
     AdminController.getMyProfile
 );
+
+router.patch(
+  '/admin-profile',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+  validateRequest(AdminValidation.updateAdminZodSchema),
+  AdminController.updateMyProfile
+)
   
 router.get(
   '/',
