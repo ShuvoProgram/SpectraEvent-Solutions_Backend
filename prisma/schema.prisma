@@ -122,7 +122,7 @@ model Booking {
     userId    String        @unique
     eventId   String        @unique
     date      DateTime
-    status    BookingStatus @default(pending)
+    status    BookingStatus @default(confirmed)
     user      User          @relation(fields: [userId], references: [id])
     createdAt DateTime      @default(now())
     updatedAt DateTime      @updatedAt
@@ -136,7 +136,7 @@ model Payment {
     id            String        @id @default(uuid())
     amount        Int
     paymentDate   DateTime      @default(now())
-    paymentStatus PaymentStatus @default(pending)
+    paymentStatus PaymentStatus @default(confirmed)
     bookingId     String        @unique
     booking       Booking       @relation(fields: [bookingId], references: [id])
     createdAt     DateTime      @default(now())
@@ -209,12 +209,13 @@ enum GENDER {
 }
 
 enum BookingStatus {
-    pending
+    complete
     confirmed
     cancelled
 }
 
 enum PaymentStatus {
-    pending
-    success
+    complete
+    confirmed
+    cancelled
 }

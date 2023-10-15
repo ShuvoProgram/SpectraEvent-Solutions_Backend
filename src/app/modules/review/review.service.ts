@@ -9,7 +9,12 @@ const createReview = async (data: Review): Promise<Review> => {
 }
 
 const getAllReview = async () => {
-  return await prisma.review.findMany();
+  return await prisma.review.findMany({
+    include: {
+      user: true,
+      event: true
+    }
+  });
 }
 
 const updateReview = async (id: string, payload: Partial<Review>): Promise<Review | null> => {

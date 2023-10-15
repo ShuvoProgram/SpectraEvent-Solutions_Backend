@@ -1,8 +1,8 @@
 export const bookingFilterableFields: string[] = [
-'searchTerm',
-'id',
-'userId',
-'eventId'
+  'searchTerm',
+  'id',
+  'userId',
+  'eventId'
 ];
 
 export const bookingFieldSearchableFields: string[] = [
@@ -13,10 +13,10 @@ export const bookingFieldSearchableFields: string[] = [
 ]
 
 export const bookingRelationFields: string[] = [
-  'userId', 'serviceId'
+  'userId', 'eventId'
 ]
 
-export const bookingRelationalFieldsMapper: {[key: string]: string} = {
+export const bookingRelationalFieldsMapper: { [key: string]: string } = {
   userId: 'user',
-  eventId: 'event'
-}
+  eventId: 'event',
+};

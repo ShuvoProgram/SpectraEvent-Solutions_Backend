@@ -6,6 +6,7 @@ import { OrganizationRoutes } from '../modules/organization/organization.routes'
 import { EventRoutes } from '../modules/event/event.routes';
 import { ReviewRoutes } from '../modules/review/review.routes';
 import { FaqRoutes } from '../modules/faq/faq.routes';
+import { BookingRoutes } from '../modules/booking/booking.routes';
 
 const router = express.Router();
 
@@ -37,6 +38,10 @@ const moduleRoutes = [
   {
     path: '/faq',
     routes: FaqRoutes
+  },
+  {
+    path: '/booking',
+    routes: BookingRoutes
   }
 ]
 
