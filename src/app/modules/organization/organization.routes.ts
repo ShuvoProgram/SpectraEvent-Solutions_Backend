@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get(
   '/',
- OrganizationController.getAllOrganize
+  OrganizationController.getAllOrganize
 );
 
 router.get(
@@ -30,6 +30,7 @@ router.patch(
   validateRequest(OrganizationValidation.updateOrganizationZodSchema),
   OrganizationController.updateOrganize
 );
+
 router.delete(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),

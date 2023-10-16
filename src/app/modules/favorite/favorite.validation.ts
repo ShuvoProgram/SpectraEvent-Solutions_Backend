@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 const createFavoriteZodSchema = z.object({
   body: z.object({
-    userId: z.string(),
-    serviceId: z.string(),
+    userId: z.string().optional(),
+    eventId: z.string(),
   }),
 });
 

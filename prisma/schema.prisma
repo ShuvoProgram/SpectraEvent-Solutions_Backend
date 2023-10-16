@@ -121,7 +121,7 @@ model Booking {
     id        String        @id @default(uuid())
     userId    String        @unique
     eventId   String        @unique
-    date      DateTime
+    date      String
     status    BookingStatus @default(confirmed)
     user      User          @relation(fields: [userId], references: [id])
     createdAt DateTime      @default(now())

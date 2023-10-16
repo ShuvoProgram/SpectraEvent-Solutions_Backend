@@ -8,10 +8,10 @@ const createEventZodSchema = z.object({
     organizationId: z.string({
       required_error: 'OrganizationId is required'
     }),
-     description: z.string({
+    description: z.string({
       required_error: 'duration is required ',
     }),
-     eventDate: z.string({
+    eventDate: z.string({
       required_error: 'Event Date is required ',
     }),
     facility: z
@@ -28,9 +28,9 @@ const createEventZodSchema = z.object({
     maxCapacity: z.number({
       required_error: 'maxCapacity is required ',
     }),
-   availableSeats: z.number({
-    required_error: 'availableSeat is required ',
-   }),
+    availableSeats: z.number({
+      required_error: 'availableSeat is required ',
+    }),
     eventImg: z
       .string({
         required_error: 'image is required ',
@@ -47,10 +47,10 @@ const updateEventZodSchema = z.object({
     organizationId: z.string({
       required_error: 'OrganizationId is required'
     }),
-     description: z.string({
+    description: z.string({
       required_error: 'duration is required ',
     }),
-     eventDate: z.string({
+    eventDate: z.string({
       required_error: 'Event Date is required ',
     }),
     facility: z
@@ -67,9 +67,9 @@ const updateEventZodSchema = z.object({
     maxCapacity: z.number({
       required_error: 'maxCapacity is required ',
     }),
-   availableSeat: z.number({
-    required_error: 'availableSeat is required ',
-   }),
+    availableSeat: z.number({
+      required_error: 'availableSeat is required ',
+    }),
     eventImg: z
       .string({
         required_error: 'image is required ',

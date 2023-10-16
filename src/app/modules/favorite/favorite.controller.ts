@@ -6,8 +6,8 @@ import httpStatus from "http-status";
 
 const addFavorite = catchAsync(async (req: Request, res: Response) => {
   const userId = req?.user?.userId;
-  const result = await FavoriteService.addFavorite(userId, req.body);
-
+  const { ...data } = req.body;
+  const result = await FavoriteService.addFavorite(data, userId);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -16,7 +16,8 @@ const addFavorite = catchAsync(async (req: Request, res: Response) => {
   })
 })
 const updateFavorite = catchAsync(async (req: Request, res: Response) => {
-  const result = await FavoriteService.updateFavorite(req.params.id, req.body);
+  const userId = req?.user?.userId;
+  const result = await FavoriteService.updateFavorite(userId, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

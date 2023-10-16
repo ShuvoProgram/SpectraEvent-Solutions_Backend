@@ -8,7 +8,8 @@ import { bookingFilterableFields } from "./booking.constant";
 import { paginationFields } from "../../../constants/pagination";
 
 const createBooking = catchAsync(async (req: Request, res: Response) => {
-  const { userId, eventId, date } = req.body;
+  const userId = req?.user?.userId;
+  const { eventId, date } = req.body;
   const result = await BookingService.createBooking(userId, eventId, date);
   sendResponse(res, {
     statusCode: httpStatus.OK,

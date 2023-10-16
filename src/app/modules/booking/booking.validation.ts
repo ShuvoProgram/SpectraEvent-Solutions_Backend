@@ -4,7 +4,7 @@ const createBookingZodSchema = z.object({
   body: z.object({
     userId: z.string({
       required_error: 'User is required ',
-    }),
+    }).optional(),
     eventId: z.string({
       required_error: 'event Id is required ',
     }),
@@ -13,7 +13,7 @@ const createBookingZodSchema = z.object({
     }),
     status: z.number({
       required_error: 'Status is required ',
-    }),
+    }).optional(),
   }),
 });
 

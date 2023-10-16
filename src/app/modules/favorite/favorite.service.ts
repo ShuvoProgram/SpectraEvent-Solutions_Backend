@@ -4,10 +4,11 @@ import prisma from "../../../utils/prisma";
 import ApiError from "../../../errors/ApiError";
 import httpStatus from "http-status";
 
-const addFavorite = async (payload: IFavorite, userId: string): Promise<Favorite | null> => {
-  const alreadyAdded = await prisma.favorite.findUnique({
+const addFavorite = async (payload: Favorite, userId: string): Promise<Favorite | null> => {
+  const alreadyAdded = await prisma.favorite.findFirst({
     where: {
-      eventId: payload.eventId
+      eventId: payload.eventId,
+      userId: userId
     }
   });
   if (alreadyAdded) {
@@ -27,9 +28,9 @@ const addFavorite = async (payload: IFavorite, userId: string): Promise<Favorite
   return result;
 }
 
-const updateFavorite = async (id: string, payload: Partial<IFavorite>) => {
+const updateFavorite = async (userId: string, payload: Partial<IFavorite>) => {
   return await prisma.favorite.update({
-    where: { id },
+    where: { userId },
     data: payload,
     include: {
       user: true,

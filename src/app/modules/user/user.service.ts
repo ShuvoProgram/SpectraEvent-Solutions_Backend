@@ -8,36 +8,28 @@ import ApiError from "../../../errors/ApiError";
 import { IUploadFile } from "../../../types/file";
 
 const createUser = async (data: User): Promise<User> => {
-  const {firstName, middleName, lastName, role, gender, address, bloodGroup, contactNo , email, password, profileImage} = data;
-  if(!validator.isEmail(email)){
+  const { role, email, password } = data;
+  if (!validator.isEmail(email)) {
     throw new Error("Invalid email address");
   }
 
   const isUserExist = await prisma.user.findUnique({
-    where: {email: email}
+    where: { email: email }
   })
-  if(isUserExist) {
+  if (isUserExist) {
     throw new ApiError(httpStatus.BAD_REQUEST, "user already exists")
   }
   const saltRound = Number(config.bcrypt_salt_rounds);
-  if(isNaN(saltRound) || saltRound <= 0) {
+  if (isNaN(saltRound) || saltRound <= 0) {
     throw new Error(`BCRYPT_SALT_ROUNDS is not properly configured.`)
   }
   const hashedPassword = await bcrypt.hash(password, saltRound);
-  
+
   const result = await prisma.user.create({
     data: {
-      firstName,
-      middleName,
-      lastName,
       role,
       email,
-      bloodGroup,
-      contactNo,
-      address,
-      gender,
       password: hashedPassword,
-      profileImage
     },
     include: {
       booking: true,
@@ -51,15 +43,15 @@ const getAllUsers = async () => {
   return await prisma.user.findMany();
 };
 
-const getSingleUser = async (id: string): Promise<User | null>=> {
-const result = await prisma.user.findUnique({
-  where: {id},
-});
-return result;
+const getSingleUser = async (id: string): Promise<User | null> => {
+  const result = await prisma.user.findUnique({
+    where: { id },
+  });
+  return result;
 }
 
 const updateUser = async (id: string, payload: Partial<User>): Promise<User | null> => {
-   if(payload.password) {
+  if (payload.password) {
     payload.password = await bcrypt.hash(payload.password, Number(config.bcrypt_salt_rounds))
   }
   const result = await prisma.user.update({
@@ -92,32 +84,32 @@ const getMyProfile = async (userId: string, userRole: string): Promise<User | nu
 
 const updateMyProfile = async (
   userId: string,
-  userRole: "customer",
+  userRole: string,
   payload: Partial<User>
 ): Promise<User | null> => {
-  const user = await prisma.user.findFirst({
-    where: {
-      id: userId,
-      role: userRole
-    }
-  })
-  const {firstName, middleName, lastName, profileImage, contactNo, dateOfBirth, bio, gender, bloodGroup, address} = payload;
+  // const user = await prisma.user.findFirst({
+  //   where: {
+  //     id: userId,
+  //     role: userRole
+  //   }
+  // })
+  const { firstName, middleName, lastName, profileImage, contactNo, dateOfBirth, bio, gender, bloodGroup, address } = payload;
 
   const result = await prisma.user.update({
     where: {
-      id: user?.id
+      id: userId
     },
     data: {
-       firstName,
-        middleName,
-        lastName,
-        profileImage,
-        contactNo,
-        dateOfBirth,
-        bio,
-        gender,
-        bloodGroup,
-        address
+      firstName,
+      middleName,
+      lastName,
+      profileImage,
+      contactNo,
+      dateOfBirth,
+      bio,
+      gender,
+      bloodGroup,
+      address
     }
   })
   return result;

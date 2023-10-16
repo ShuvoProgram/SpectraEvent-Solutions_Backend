@@ -11,7 +11,7 @@ router.post('/add', auth(ENUM_USER_ROLE.CUSTOMER), validateRequest(FavoriteValid
 
 router.delete('/:id', FavoriteController.removeFavorite);
 
-router.get('/user', auth(ENUM_USER_ROLE.CUSTOMER), FavoriteController.listFavorite);
+router.get('/', auth(ENUM_USER_ROLE.CUSTOMER), FavoriteController.listFavorite);
 
 router.get('/:id', FavoriteController.getFavorite);
 
