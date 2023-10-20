@@ -8,7 +8,7 @@ import ApiError from "../../../errors/ApiError";
 import { IUploadFile } from "../../../types/file";
 
 const createUser = async (data: User): Promise<User> => {
-  const { firstName,  lastName ,role, email, password } = data;
+  const { firstName,  lastName , role, email, password } = data;
   if (!validator.isEmail(email)) {
     throw new Error("Invalid email address");
   }
