@@ -3,13 +3,19 @@ import { role } from "./auth.constant";
 
 const createUserZodSchema = z.object({
   body: z.object({
+    firstName: z.string({
+      required_error: "firstName is required"
+    }),
+    lastName: z.string({
+      required_error: "lastName is required"
+    }),
     email: z.string({
       required_error: "Email is required"
     }),
     password: z.string({
       required_error: "Password is required"
     }),
-    role: z.enum([...role] as [string, ...string[]]),
+    role: z.enum([...role] as [string, ...string[]]).optional(),
   })
 })
 
@@ -32,8 +38,16 @@ const refreshTokenZodSchema = z.object({
   })
 });
 
+const changePasswordZodSchema = z.object({
+  body: z.object({
+    oldPassword: z.string().min(6, { message: 'Password too short' }),
+    newPassword: z.string().min(6, { message: 'Password too short' }),
+  }),
+});
+
 export const AuthValidation = {
   createUserZodSchema,
   loginZodSchema,
-  refreshTokenZodSchema
+  refreshTokenZodSchema,
+  changePasswordZodSchema
 }

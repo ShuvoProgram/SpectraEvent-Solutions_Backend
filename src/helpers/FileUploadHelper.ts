@@ -11,15 +11,31 @@ cloudinary.config({
 });
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/')
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname)
+    destination : (req , file , cb) => {
+        cb(null , 'upload')
+    } ,
+    filename : (req , file , cb) => {
+        const prefix = Date.now() + file.originalname 
+        cb(null , prefix)
     }
-});
+})
 
-const upload = multer({ storage: storage })
+const fileFilter = (req: any , file: { mimetype: string; } , cb: (arg0: null, arg1: boolean) => void) => {
+    const allowedMimetypes = ["image/png" , "image/jpg" , "image/jpeg"]
+    if(allowedMimetypes.includes(file.mimetype)){
+     cb(null , true)
+    }
+    else{
+     cb(null , true)
+    }
+ }
+ 
+ 
+ const limits = {
+     fileSize : 10*1024*1024
+ }
+
+ const upload = multer({storage , fileFilter , limits})
 
 const uploadToCloudinary = async (file: IUploadFile): Promise<ICloudinaryResponse | undefined> => {
     return new Promise((resolve, reject) => {

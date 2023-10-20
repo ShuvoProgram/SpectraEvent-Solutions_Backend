@@ -1,5 +1,5 @@
 import httpStatus from "http-status";
-import { ILoginUser, ILoginUserResponse, IRefreshTokenResponse } from "./auth.interface";
+import { IChangePassword, ILoginUser, ILoginUserResponse, IRefreshTokenResponse } from "./auth.interface";
 import prisma from "../../../utils/prisma";
 import bcrypt from 'bcrypt';
 import { jwtHelpers } from "../../../helpers/jwtHelpers";
@@ -50,7 +50,8 @@ const loginUser = async (data: ILoginUser): Promise<ILoginUserResponse> => {
   )
   return {
     accessToken,
-    refreshToken
+    refreshToken,
+    needsPasswordChange: user.needsPasswordChange
   }
   } else {
     if(!admin) {
@@ -76,7 +77,8 @@ const loginUser = async (data: ILoginUser): Promise<ILoginUserResponse> => {
   )
   return {
     accessToken,
-    refreshToken
+    refreshToken,
+    needsPasswordChange: admin.needsPasswordChange
   }}}
 
 const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
@@ -115,7 +117,58 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   }
 }
 
+const changePassword = async (
+  userId: string,
+  payload: IChangePassword
+): Promise<void> => {
+  const { oldPassword, newPassword } = payload;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId }
+  });
+
+  const admin = await prisma.admin.findUnique({
+    where: { id: userId }
+  })
+
+  if(user?.id === userId) {
+    if (!user) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+    }
+    const isOldPasswordMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isOldPasswordMatch) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Old Password is incorrect');
+    }
+    const newHashedPassword = await bcrypt.hash(newPassword, 10);
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      password: newHashedPassword,
+      needsPasswordChange: false,
+    },
+  });
+  } else {
+    if(!admin) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Admin does not exist');
+    }
+    const isOldPasswordMatch = await bcrypt.compare(oldPassword, admin.password);
+    if (!isOldPasswordMatch) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Old Password is incorrect');
+    }
+    const newHashedPassword = await bcrypt.hash(newPassword, 10);
+    await prisma.admin.update({
+      where: { id: userId },
+      data: {
+        password: newHashedPassword,
+        needsPasswordChange: false,
+      }
+    })
+  }
+};
+
 export const AuthService = {
   loginUser,
-  refreshToken
+  refreshToken,
+  changePassword
 }

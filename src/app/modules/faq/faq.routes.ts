@@ -14,7 +14,7 @@ router.get('/:id', FaqController.getSingleFaq);
 router.post(
   '/',
   validateRequest(FaqValidation.createFaqZodSchema),
-  auth(ENUM_USER_ROLE.ADMIN),
+  // auth(ENUM_USER_ROLE.ADMIN),
   FaqController.createFaq
 );
 

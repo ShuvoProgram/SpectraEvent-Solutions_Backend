@@ -6,6 +6,8 @@ import httpStatus from "http-status";
 import { AuthService } from "./auth.service";
 import config from "../../../config";
 import { ILoginUserResponse, IRefreshTokenResponse } from "./auth.interface";
+import jwt from 'jsonwebtoken';
+import ApiError from "../../../errors/ApiError";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const {...userData} = req.body;
@@ -58,8 +60,38 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const changePassword = catchAsync(async (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'User not authorized');
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  let userId: string; // Change the type to string
+  try {
+    const decodedToken = jwt.verify(token, config.jwt.secret as string) as any;
+    console.log(decodedToken);
+    userId = decodedToken.userId.toString();
+  } catch (error) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'User not authorized');
+  }
+
+  const { ...passwordData } = req.body;
+
+  await AuthService.changePassword(userId, passwordData);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Password changed successfully !',
+  });
+});
+
 export const AuthController = {
   createUser,
   loginUser,
-  refreshToken
+  refreshToken,
+  changePassword
 }

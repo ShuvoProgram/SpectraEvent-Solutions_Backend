@@ -100,6 +100,7 @@ const getSingleBlog = async (id: string): Promise<Blog | null> => {
     },
     include: {
       review: true,
+      Admin: true
     },
   });
   return result;

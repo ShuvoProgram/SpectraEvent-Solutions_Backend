@@ -8,6 +8,7 @@ export type ILoginUser = {
 export type ILoginUserResponse = {
  accessToken: string
   refreshToken?: string
+  needsPasswordChange: boolean | null;
 }
 
 export type IRefreshTokenResponse = {
@@ -18,3 +19,8 @@ export type IVerifiedLoginUser = {
   userId: string;
   role: ENUM_USER_ROLE;
 }
+
+export type IChangePassword = {
+  oldPassword: string;
+  newPassword: string;
+};

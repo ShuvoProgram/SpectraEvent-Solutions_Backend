@@ -22,6 +22,7 @@ model User {
     dateOfBirth  String?
     bio          String?
     gender       GENDER?
+    needsPasswordChange Boolean? @default(false)
     bloodGroup   String?
     address      String?
     role         String         @default("customer")
@@ -50,6 +51,7 @@ model Admin {
     bio          String?
     gender       GENDER?
     bloodGroup   String?
+    needsPasswordChange Boolean? @default(false)
     address      String?
     role         Admin_ROLES    @default(admin)
     users        User[]

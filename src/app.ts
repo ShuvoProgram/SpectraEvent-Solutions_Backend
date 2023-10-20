@@ -7,7 +7,12 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 
 const app: Application = express();
 
-app.use(cors());
+const corsOption = {
+  origin: 'http://localhost:3000',
+  credentials: true
+}
+
+app.use(cors(corsOption));
 app.use(cookieParser());
 
 app.use(express.json());
