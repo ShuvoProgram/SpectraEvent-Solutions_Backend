@@ -31,6 +31,7 @@ model User {
     booking      Booking[]
     Review       Review[]
     Favorite     Favorite[]
+    feedback Feedback[]
     Admin        Admin?         @relation(fields: [adminId], references: [id])
     adminId      String?
     Notification Notification[]
@@ -58,6 +59,8 @@ model Admin {
     event        Event[]
     organization Organization[]
     blog         Blog[]
+
+    @@map("admins")
 }
 
 // Event Organization
@@ -68,11 +71,9 @@ model Organization {
     event          Event[]
     createdAt      DateTime        @default(now())
     updatedAt      DateTime        @updatedAt
-    AvailableEvent AvailableEvent?
     Admin          Admin?          @relation(fields: [adminId], references: [id])
     adminId        String?
-
-    @@map("organization")
+    @@map("organizations")
 }
 
 // Event
@@ -82,22 +83,35 @@ model Event {
     organizationId String
     isBooked       Boolean      @default(false)
     description    String
-    eventDate      String
     facility       String?
-    location       String
+    locationId String
     price          Int
     maxCapacity    Int          @default(0)
     availableSeats Int
     eventImg       String
+    adminId        String?
     createdAt      DateTime     @default(now())
     updatedAt      DateTime     @updatedAt
-    Organization   Organization @relation(fields: [organizationId], references: [id])
     Booking        Booking[]
     Review         Review[]
-    Favorite       Favorite?
-    Admin          Admin?       @relation(fields: [adminId], references: [id])
-    adminId        String?
     Ticket         Ticket[]
+    availableEvent AvailableEvent[]
+    Favorite       Favorite?
+    Location Location @relation(fields: [locationId], references: [id])
+    Organization   Organization @relation(fields: [organizationId], references: [id])
+    Admin          Admin?       @relation(fields: [adminId], references: [id])
+
+    @@map("events")
+}
+
+model Location {
+    id String @id @default(uuid())
+    title String
+    event Event[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("locations")
 }
 
 model Ticket {
@@ -110,37 +124,35 @@ model Ticket {
 
 model AvailableEvent {
     id             String       @id @default(uuid())
-    organizationId String
-    organization   Organization @relation(fields: [organizationId], references: [id])
+    eventId String
+    event Event @relation(fields: [eventId], references: [id])
     createdAt      DateTime     @default(now())
     updatedAt      DateTime     @updatedAt
-
-    @@unique([organizationId])
+    @@unique([eventId])
     @@map("available_events")
 }
 
 model Booking {
     id        String        @id @default(uuid())
     userId    String        @unique
+    paymentInfoId String @unique
     eventId   String        @unique
-    date      String
+    scheduleDate      DateTime
     status    BookingStatus @default(confirmed)
-    user      User          @relation(fields: [userId], references: [id])
     createdAt DateTime      @default(now())
     updatedAt DateTime      @updatedAt
+    user      User          @relation(fields: [userId], references: [id])
     Event     Event         @relation(fields: [eventId], references: [id])
-    Payment   Payment?
-
+    PaymentInfo   PaymentInfo @relation(fields: [paymentInfoId], references: [id])
     @@map("bookings")
 }
 
-model Payment {
+model PaymentInfo {
     id            String        @id @default(uuid())
-    amount        Int
-    paymentDate   DateTime      @default(now())
+    paymentMethod String
     paymentStatus PaymentStatus @default(confirmed)
     bookingId     String        @unique
-    booking       Booking       @relation(fields: [bookingId], references: [id])
+    booking       Booking[]
     createdAt     DateTime      @default(now())
     updatedAt     DateTime      @updatedAt
 }
@@ -165,7 +177,6 @@ model Favorite {
     id      String @id @default(uuid())
     userId  String @unique
     eventId String @unique
-
     user      User     @relation(fields: [userId], references: [id])
     event     Event    @relation(fields: [eventId], references: [id])
     createdAt DateTime @default(now())
@@ -185,15 +196,18 @@ model Notification {
     userId    String
     user      User     @relation(fields: [userId], references: [id])
     message   String
+    read Boolean @default(false)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
 model Blog {
     id          String   @id @default(uuid())
-    contentType String
+    contentType String  @map("content_type")
     title       String
     content     String
+    image String
+    date DateTime
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
     Admin       Admin?   @relation(fields: [adminId], references: [id])
@@ -201,6 +215,18 @@ model Blog {
     review      Review[]
 
     @@map("blogs")
+}
+
+model Feedback {
+  id          String   @id @default(uuid())
+  userId      String
+  comment     String
+  suggestions String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("feedback")
 }
 
 enum Admin_ROLES {
@@ -214,13 +240,13 @@ enum GENDER {
 }
 
 enum BookingStatus {
-    complete
+    pending
     confirmed
     cancelled
 }
 
 enum PaymentStatus {
-    complete
+    pending
     confirmed
     cancelled
 }

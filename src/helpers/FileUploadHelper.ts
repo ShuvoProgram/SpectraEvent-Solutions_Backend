@@ -30,7 +30,6 @@ const fileFilter = (req: any , file: { mimetype: string; } , cb: (arg0: null, ar
     }
  }
  
- 
  const limits = {
      fileSize : 10*1024*1024
  }
