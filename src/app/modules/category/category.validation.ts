@@ -1,17 +1,17 @@
 import {z} from 'zod';
 
-const createOrganizationZodSchema = z.object({
+const createCategoryZodSchema = z.object({
   body: z.object({
     name: z.string({
       required_error: 'Name is required'
-    }),
+    }).optional(),
     image: z.string({
       required_error: 'Image is required'
-    })
+    }).optional()
   })
 });
 
-const updateOrganizationZodSchema = z.object({
+const updateCategoryZodSchema = z.object({
   body: z.object({
     name: z.string({
       required_error: 'Name is required'
@@ -22,7 +22,7 @@ const updateOrganizationZodSchema = z.object({
   })
 })
 
-export const OrganizationValidation = {
-  createOrganizationZodSchema,
-  updateOrganizationZodSchema
+export const CategoryValidation = {
+  createCategoryZodSchema,
+  updateCategoryZodSchema
 }

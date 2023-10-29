@@ -2,6 +2,8 @@ import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
 import { AuthValidation } from './auth.validation';
 import { AuthController } from './auth.controller';
+import auth from '../../middlewares/auth';
+import { ENUM_USER_ROLE } from '../../../enums/role';
 
 const router = express.Router();
 
@@ -26,6 +28,7 @@ router.post(
 // Route for Changing Password
 router.post(
   '/change-password',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.CUSTOMER, ENUM_USER_ROLE.SUPER_ADMIN),
   validateRequest(AuthValidation.changePasswordZodSchema),
   AuthController.changePassword
 );

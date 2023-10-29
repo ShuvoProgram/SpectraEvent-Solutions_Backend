@@ -25,7 +25,7 @@ model User {
     needsPasswordChange Boolean? @default(false)
     bloodGroup   String?
     address      String?
-    role         String         @default("customer")
+    role         String         @default("user")
     createdAt    DateTime       @default(now())
     updatedAt    DateTime       @updatedAt
     booking      Booking[]
@@ -56,71 +56,64 @@ model Admin {
     address      String?
     role         Admin_ROLES    @default(admin)
     users        User[]
+    vanue Vanue[]
     event        Event[]
-    organization Organization[]
     blog         Blog[]
+    Category Category[]
 
     @@map("admins")
 }
 
-// Event Organization
-model Organization {
+// Event Category
+model Category {
     id             String          @id @default(uuid())
-    name           String
-    image          String
+    name           String?
+    image          String?
+    adminId        String?
     event          Event[]
     createdAt      DateTime        @default(now())
     updatedAt      DateTime        @updatedAt
     Admin          Admin?          @relation(fields: [adminId], references: [id])
-    adminId        String?
-    @@map("organizations")
+    @@map("Categorys")
 }
 
 // Event
 model Event {
     id             String       @id @default(uuid())
-    title          String
-    organizationId String
-    isBooked       Boolean      @default(false)
-    description    String
+    title          String?
+    CategoryId String
+    isBooked       Boolean?      @default(false)
+    description    String?
     facility       String?
-    locationId String
-    price          Int
-    maxCapacity    Int          @default(0)
-    availableSeats Int
-    eventImg       String
+    vanueId String
+    price          Int?
+    people   Int?          @default(0)
+    eventImg       String?
     adminId        String?
     createdAt      DateTime     @default(now())
     updatedAt      DateTime     @updatedAt
     Booking        Booking[]
     Review         Review[]
-    Ticket         Ticket[]
     availableEvent AvailableEvent[]
     Favorite       Favorite?
-    Location Location @relation(fields: [locationId], references: [id])
-    Organization   Organization @relation(fields: [organizationId], references: [id])
+    Vanue Vanue @relation(fields: [vanueId], references: [id])
+    Category   Category @relation(fields: [CategoryId], references: [id])
     Admin          Admin?       @relation(fields: [adminId], references: [id])
 
     @@map("events")
 }
 
-model Location {
+model Vanue {
     id String @id @default(uuid())
     title String
+    adminId String
     event Event[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-
-    @@map("locations")
+    Admin          Admin?       @relation(fields: [adminId], references:[id])
+    @@map("Vanues")
 }
 
-model Ticket {
-    id       String @id @default(uuid())
-    eventId  String @unique
-    quantity Int
-    price    Int
-    event    Event  @relation(fields: [eventId], references: [id])
-}
 
 model AvailableEvent {
     id             String       @id @default(uuid())

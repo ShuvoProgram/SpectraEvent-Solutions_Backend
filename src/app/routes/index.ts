@@ -2,13 +2,15 @@ import express from 'express';
 import { AuthRoutes } from '../modules/auth/auth.route';
 import { UserRoutes } from '../modules/user/user.route';
 import { AdminRoutes } from '../modules/admin/admin.routes';
-import { OrganizationRoutes } from '../modules/organization/organization.routes';
 import { EventRoutes } from '../modules/event/event.routes';
 import { ReviewRoutes } from '../modules/review/review.routes';
 import { FaqRoutes } from '../modules/faq/faq.routes';
 import { BookingRoutes } from '../modules/booking/booking.routes';
 import { FavoriteRoutes } from '../modules/favorite/favorite.routes';
 import { BlogRoutes } from '../modules/blog/blog.routes';
+import { FeedbackRoutes } from '../modules/feedback/feedback.routes';
+import { CategoryRoutes } from '../modules/category/category.routes';
+import { VanueRoutes } from '../modules/vanue/vanue.routes';
 
 const router = express.Router();
 
@@ -26,8 +28,8 @@ const moduleRoutes = [
     routes: AdminRoutes
   },
   {
-    path: '/organization',
-    routes: OrganizationRoutes
+    path: '/category',
+    routes: CategoryRoutes
   },
   {
     path: '/event',
@@ -52,6 +54,14 @@ const moduleRoutes = [
   {
     path: '/blog',
     routes: BlogRoutes
+  },
+  {
+    path: '/feedback',
+    routes: FeedbackRoutes
+  },
+  {
+    path: '/vanue',
+    routes: VanueRoutes
   }
 ]
 

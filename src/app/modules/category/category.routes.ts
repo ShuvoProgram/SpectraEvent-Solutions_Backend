@@ -1,40 +1,40 @@
 import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
-import { OrganizationValidation } from './organization.validation';
 import auth from '../../middlewares/auth';
 import { ENUM_USER_ROLE } from '../../../enums/role';
-import { OrganizationController } from './organization.controller';
+import { CategoryController } from './category.controller';
+import { CategoryValidation } from './category.validation';
 
 const router = express.Router();
 
 router.get(
   '/',
-  OrganizationController.getAllOrganize
+  CategoryController.getAllOrganize
 );
 
 router.get(
   '/:id',
-  OrganizationController.getSingleOrganization
+  CategoryController.getSingleCategory
 );
 
 router.post(
   '/',
-  validateRequest(OrganizationValidation.createOrganizationZodSchema),
+  validateRequest(CategoryValidation.createCategoryZodSchema),
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  OrganizationController.createOrganize
+  CategoryController.createOrganize
 );
 
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  validateRequest(OrganizationValidation.updateOrganizationZodSchema),
-  OrganizationController.updateOrganize
+  validateRequest(CategoryValidation.updateCategoryZodSchema),
+  CategoryController.updateOrganize
 );
 
 router.delete(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  OrganizationController.deleteOrganization
+  CategoryController.deleteCategory
 );
 
-export const OrganizationRoutes = router;
+export const CategoryRoutes = router;

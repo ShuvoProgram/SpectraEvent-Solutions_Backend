@@ -61,22 +61,7 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 });
 
 const changePassword = catchAsync(async (req: Request, res: Response) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'User not authorized');
-  }
-
-  const token = authHeader.split(' ')[1];
-
-  let userId: string; // Change the type to string
-  try {
-    const decodedToken = jwt.verify(token, config.jwt.secret as string) as any;
-    console.log(decodedToken);
-    userId = decodedToken.userId.toString();
-  } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'User not authorized');
-  }
+  const userId = req?.user?.userId;
 
   const { ...passwordData } = req.body;
 

@@ -6,26 +6,25 @@ import { paginationHelpers } from "../../../helpers/paginationHelpers";
 import { eventFieldSearchableFields, eventRelationalFields, eventRelationalFieldsMapper } from "./event.constant";
 
 const createEvent = async (data: Event, Id: string): Promise<Event> => {
-  let { title, organizationId, isBooked, description, eventDate, facility, location, price, maxCapacity, availableSeats, eventImg, adminId } = data;
+  let { title, CategoryId, isBooked, description, facility, vanueId, price, people, eventImg, adminId } = data;
 
   adminId = Id;
   const result = await prisma.event.create({
     data: {
       title,
-      organizationId,
-      isBooked,
+      CategoryId,
+      isBooked: false,
       description,
-      eventDate,
       facility,
-      location,
+      vanueId,
       price,
-      maxCapacity,
-      availableSeats,
+      people,
       eventImg,
       adminId
     },
     include: {
-      Organization: true
+      Category: true,
+      Vanue: true   
     }
   });
   return result;

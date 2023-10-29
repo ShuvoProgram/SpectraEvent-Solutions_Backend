@@ -1,12 +1,12 @@
 export const eventFilterableFields: string[] = [
   'searchTerm',
   'id',
-  'organizationId',
+  'CategoryId',
 ];
 
-export const eventFieldSearchableFields: string[] = ['title', 'location','price'];
+export const eventFieldSearchableFields: string[] = ['title', 'Vanue','price'];
 
-export const eventRelationalFields: string[] = ['organizationId'];
+export const eventRelationalFields: string[] = ['CategoryId'];
 export const eventRelationalFieldsMapper: { [key: string]: string } = {
-  organizationId: 'organizationId',
+  CategoryId: 'CategoryId',
 };
