@@ -1,9 +1,11 @@
-import { Event, Prisma } from "@prisma/client";
+import { Event, Favorite, Prisma } from "@prisma/client";
 import prisma from "../../../utils/prisma";
 import { IEventFilterRequest } from "./event.interface";
 import { IPaginationOptions } from "../../../types/paginationType";
 import { paginationHelpers } from "../../../helpers/paginationHelpers";
 import { eventFieldSearchableFields, eventRelationalFields, eventRelationalFieldsMapper } from "./event.constant";
+import httpStatus from "http-status";
+import ApiError from "../../../errors/ApiError";
 
 const createEvent = async (data: Event, Id: string): Promise<Event> => {
   let { title, CategoryId, isBooked, description, facility, vanueId, price, people, eventImg, adminId } = data;
@@ -124,14 +126,50 @@ const updateEvent = async (
   return result;
 };
 
-const deleteEvent = async (id: string): Promise<Event> => {
-  const result = await prisma.event.delete({
+const deleteEvent = async (id: string): Promise<{ event: Event; favorite: Favorite | null }> => {
+  const event = await prisma.event.findUnique({
     where: {
       id: id,
     },
   });
-  return result;
+
+  if (!event) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Event not found");
+  }
+
+  // Check if a favorite exists for this event
+  const favorite = await prisma.favorite.findUnique({
+    where: {
+      eventId: id,
+    },
+  });
+
+  const eventDeleteAction = await prisma.$transaction(async (transactionClient) => {
+    if (favorite) {
+      // Delete the favorite if it exists
+      await transactionClient.favorite.delete({
+        where: {
+          eventId: id,
+        },
+      });
+    }
+
+    // Delete the event
+    const eventDelete = await transactionClient.event.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return {
+      event: eventDelete,
+      favorite: favorite, // You can return the favorite even if it was not found
+    };
+  });
+
+  return eventDeleteAction;
 };
+
 
 export const EventService = {
   createEvent,

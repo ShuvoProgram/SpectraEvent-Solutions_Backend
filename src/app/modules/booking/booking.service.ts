@@ -7,11 +7,9 @@ import { Booking, Prisma } from "@prisma/client";
 import { paginationHelpers } from "../../../helpers/paginationHelpers";
 import { bookingFieldSearchableFields, bookingRelationFields, bookingRelationalFieldsMapper } from "./booking.constant";
 
-const createBooking = async (
-  userId: string,
-  eventId: string,
-  date: string
-): Promise<any> => {
+const createBooking = async (userId: string, eventId: string, scheduleDate: string): Promise<any> => {
+
+  // Check if the event exists
   const event = await prisma.event.findUnique({
     where: {
       id: eventId,
@@ -22,53 +20,48 @@ const createBooking = async (
     throw new ApiError(httpStatus.BAD_REQUEST, "This Event is not available!");
   }
 
-  if (event.availableSeats <= 0) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Event is Fully Booked");
+  if(event.isBooked === true) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "This Event is already booked!");
   }
 
+  // Use a transaction to ensure data consistency
   const eventBooking = await prisma.$transaction(async (transactionClient) => {
+
+    // Create a booking
     const booking = await transactionClient.booking.create({
       data: {
-        date,
-        userId,
+        scheduleDate,
+        userId: userId,
         eventId,
-        status: 'confirmed',
+        status: 'pending',
       },
       include: {
         user: true,
         Event: true,
-      },
+      }
     });
 
-    const updatedAvailableSeats = event.availableSeats - 1;
-    const isBooked = updatedAvailableSeats === 0;
+    // Check if the booking is confirmed
+    const isBooked = booking.status === "pending";
 
+    // Update the event's 'isBooked' status
     await transactionClient.event.update({
       where: {
         id: eventId,
       },
       data: {
-        availableSeats: updatedAvailableSeats,
-        isBooked: isBooked ? true : false,
-      },
-    });
-
-    const payment = await transactionClient.payment.create({
-      data: {
-        amount: event.price,
-        paymentStatus: 'confirmed',
-        bookingId: booking.id,
+        isBooked: isBooked,
       },
     });
 
     return {
       booking: booking,
-      payment: payment,
     };
   });
 
   return eventBooking;
 };
+
 
 const getAllBooking = async (
   filters: IEventFilterRequest,
@@ -184,6 +177,13 @@ const cancelBooking = async (bookingId: string): Promise<any> => {
     },
   });
 
+   // Check if the event exists
+   const event = await prisma.event.findUnique({
+    where: {
+      id: booking?.eventId,
+    },
+  });
+
   if (!booking) {
     throw new Error('Booking not found');
   }
@@ -207,32 +207,12 @@ const cancelBooking = async (bookingId: string): Promise<any> => {
         },
       });
 
-      const availableEvent = await transactionClient.event.findUnique({
-        where: {
-          id: booking.eventId
-        },
-      });
-
       await transactionClient.event.update({
         where: {
           id: booking.eventId,
         },
         data: {
-          availableSeats: {
-            increment: 1
-          },
-
-          isBooked:
-            availableEvent && availableEvent.availableSeats + 1 > 0 ? false : true,
-        },
-      });
-
-      await transactionClient.payment.update({
-        where: {
-          bookingId
-        },
-        data: {
-          paymentStatus: "cancelled"
+          isBooked: event?.isBooked === false
         },
       });
 
@@ -264,10 +244,6 @@ const confirmBooking = async (bookingId: string): Promise<any> => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Booking has already been confirmed');
   };
 
-  if (booking.status === 'complete') {
-    throw new Error('Booking has already been completed');
-  }
-
   const confirmBooking = await prisma.$transaction(
     async transactionClient => {
       const bookingToConfirm = await transactionClient.booking.update({
@@ -278,17 +254,19 @@ const confirmBooking = async (bookingId: string): Promise<any> => {
           status: 'confirmed'
         },
       });
-      await transactionClient.payment.update({
+
+      const updateEventBooked = await transactionClient.event.update({
         where: {
-          bookingId
+          id: booking.eventId
         },
         data: {
-          paymentStatus: 'confirmed'
-        },
-      });
+          isBooked: true
+        }
+      })
 
       return {
-        booking: bookingToConfirm
+        booking: bookingToConfirm,
+        event: updateEventBooked
       };
     }
   );
@@ -296,56 +274,56 @@ const confirmBooking = async (bookingId: string): Promise<any> => {
   return confirmBooking;
 }
 
-const completedBooking = async (bookingId: string): Promise<any> => {
-  const booking = await prisma.booking.findUnique({
-    where: {
-      id: bookingId,
-    },
-  });
+// const completedBooking = async (bookingId: string): Promise<any> => {
+//   const booking = await prisma.booking.findUnique({
+//     where: {
+//       id: bookingId,
+//     },
+//   });
 
-  if (!booking) {
-    throw new Error('Booking does not exist');
-  }
+//   if (!booking) {
+//     throw new Error('Booking does not exist');
+//   }
 
-  if (booking.status === 'cancelled') {
-    throw new Error('Booking has cancelled');
-  }
+//   if (booking.status === 'cancelled') {
+//     throw new Error('Booking has cancelled');
+//   }
 
-  if (booking.status === 'confirmed') {
-    throw new Error('Booking been confirmed');
-  }
+//   if (booking.status === 'confirmed') {
+//     throw new Error('Booking been confirmed');
+//   }
 
-  if (booking.status === 'complete') {
-    throw new Error('Booking has already been completed');
-  }
+//   if (booking.status === 'complete') {
+//     throw new Error('Booking has already been completed');
+//   }
 
-  const completedBooking = await prisma.$transaction(
-    async transactionClient => {
-      const bookingToConfirm = await transactionClient.booking.update({
-        where: {
-          id: bookingId,
-        },
-        data: {
-          status: 'complete',
-        },
-      });
-      await transactionClient.payment.update({
-        where: {
-          bookingId,
-        },
-        data: {
-          paymentStatus: 'complete',
-        },
-      });
+//   const completedBooking = await prisma.$transaction(
+//     async transactionClient => {
+//       const bookingToConfirm = await transactionClient.booking.update({
+//         where: {
+//           id: bookingId,
+//         },
+//         data: {
+//           status: 'complete',
+//         },
+//       });
+//       await transactionClient.payment.update({
+//         where: {
+//           bookingId,
+//         },
+//         data: {
+//           paymentStatus: 'complete',
+//         },
+//       });
 
-      return {
-        booking: bookingToConfirm,
-      };
-    }
-  );
+//       return {
+//         booking: bookingToConfirm,
+//       };
+//     }
+//   );
 
-  return completedBooking;
-};
+//   return completedBooking;
+// };
 
 export const BookingService = {
   createBooking,
@@ -355,5 +333,5 @@ export const BookingService = {
   deleteBooking,
   cancelBooking,
   confirmBooking,
-  completedBooking
+  // completedBooking
 };

@@ -9,8 +9,8 @@ import { paginationFields } from "../../../constants/pagination";
 
 const createBooking = catchAsync(async (req: Request, res: Response) => {
   const userId = req?.user?.userId;
-  const { eventId, date } = req.body;
-  const result = await BookingService.createBooking(userId, eventId, date);
+  const { eventId, scheduleDate } = req.body;
+  const result = await BookingService.createBooking(userId, eventId, scheduleDate);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -87,16 +87,16 @@ const confirmBooking = catchAsync(async (req, res) => {
   });
 });
 
-const completedBooking = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const result = await BookingService.completedBooking(id);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Booking confirmed successfully',
-    data: result,
-  });
-});
+// const completedBooking = catchAsync(async (req, res) => {
+//   const { id } = req.params;
+//   const result = await BookingService.completedBooking(id);
+//   sendResponse(res, {
+//     statusCode: httpStatus.OK,
+//     success: true,
+//     message: 'Booking confirmed successfully',
+//     data: result,
+//   });
+// });
 
 export const BookingController = {
   createBooking,
@@ -106,5 +106,5 @@ export const BookingController = {
   deleteBooking,
   cancelBooking,
   confirmBooking,
-  completedBooking
+  // completedBooking
 };

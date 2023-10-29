@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post(
   '/create-booking',
-  validateRequest(BookingValidation.createBookingZodSchema),
+  // validateRequest(BookingValidation.createBookingZodSchema),
   auth(ENUM_USER_ROLE.CUSTOMER),
   BookingController.createBooking
 );
@@ -33,18 +33,18 @@ router.patch(
 );
 router.patch(
   '/confirm-booking/:id',
-  validateRequest(BookingValidation.updateBookingZodSchema),
+  // validateRequest(BookingValidation.updateBookingZodSchema),
   auth(ENUM_USER_ROLE.ADMIN),
   BookingController.confirmBooking
 );
-router.patch(
-  '/complete-booking/:id',
-  validateRequest(BookingValidation.updateBookingZodSchema),
-  auth(ENUM_USER_ROLE.ADMIN),
-  BookingController.completedBooking
-);
+// router.patch(
+//   '/complete-booking/:id',
+//   validateRequest(BookingValidation.updateBookingZodSchema),
+//   auth(ENUM_USER_ROLE.ADMIN),
+//   BookingController.completedBooking
+// );
 router.delete(
-  '/',
+  '/:id',
   auth(ENUM_USER_ROLE.ADMIN),
   BookingController.deleteBooking
 );
