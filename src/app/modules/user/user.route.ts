@@ -9,7 +9,10 @@ const router = express.Router();
 
 router.get('/profile', auth(ENUM_USER_ROLE.CUSTOMER), UserController.getMyProfile);
 
-router.patch('/profile', auth(ENUM_USER_ROLE.CUSTOMER), validateRequest(UserValidation.updateUpdateZodSchema), UserController.updateMyProfile);
+router.patch('/profile',
+ auth(ENUM_USER_ROLE.CUSTOMER),
+  // validateRequest(UserValidation.updateUpdateZodSchema),
+   UserController.updateMyProfile);
 
 router.get(
   '/',

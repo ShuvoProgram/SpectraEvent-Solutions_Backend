@@ -41,8 +41,8 @@ const createBooking = async (userId: string, eventId: string, scheduleDate: stri
       }
     });
 
-    // Check if the booking is confirmed
-    const isBooked = booking.status === "pending";
+    // // Check if the booking is confirmed
+    // const isBooked = booking.status === "pending";
 
     // Update the event's 'isBooked' status
     await transactionClient.event.update({
@@ -50,7 +50,7 @@ const createBooking = async (userId: string, eventId: string, scheduleDate: stri
         id: eventId,
       },
       data: {
-        isBooked: isBooked,
+        isBooked: false,
       },
     });
 

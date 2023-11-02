@@ -5,7 +5,7 @@ import catchAsync from '../../../utils/catchAsync';
 import { EventService } from './event.service';
 import sendResponse from '../../../utils/sendResponse';
 import pick from '../../../utils/pick';
-import { eventFilterableFields } from './event.constant';
+import { PriceSearchableFields, eventFilterableFields } from './event.constant';
 
 const createEvent = catchAsync(async (req: Request, res: Response) => {
   const adminId = req?.user?.userId
@@ -21,7 +21,8 @@ const createEvent = catchAsync(async (req: Request, res: Response) => {
 const getAllEvents = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, eventFilterableFields);
   const options = pick(req.query, paginationFields);
-  const result = await EventService.getAllEvents(filters, options);
+  const priceQuery = pick(req.query, PriceSearchableFields);
+  const result = await EventService.getAllEvents(filters, options, priceQuery);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
