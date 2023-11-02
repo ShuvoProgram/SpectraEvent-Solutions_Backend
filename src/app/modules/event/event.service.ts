@@ -8,7 +8,7 @@ import httpStatus from "http-status";
 import ApiError from "../../../errors/ApiError";
 
 const createEvent = async (data: Event, Id: string): Promise<Event> => {
-  let { title, CategoryId, isBooked, description, facility, vanueId, price, people, eventImg, adminId } = data;
+  let { title, CategoryId, isBooked, description, facility, vanueId, price, people, eventImg, adminId, isComingSoon } = data;
 
   adminId = Id;
   const result = await prisma.event.create({
@@ -16,6 +16,7 @@ const createEvent = async (data: Event, Id: string): Promise<Event> => {
       title,
       CategoryId,
       isBooked: false,
+      isComingSoon: true,
       description,
       facility,
       vanueId,

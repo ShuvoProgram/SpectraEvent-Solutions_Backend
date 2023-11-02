@@ -85,6 +85,7 @@ model Event {
     isBooked       Boolean?      @default(false)
     description    String?
     facility       String?
+    isComingSoon Boolean?
     vanueId String
     price          Int?
     people   Int?          @default(0)
