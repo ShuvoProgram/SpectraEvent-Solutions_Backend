@@ -24,7 +24,7 @@ https://github.com/hasanulhasan/teaching-torch
 
 ### `Back End`
 
-https://spectra-event-solutions-backend.vercel.app/
+https://spectraevent-solutions.up.railway.app/
 
 <!-- </br></br>
 ## Try as Admin  </br>
