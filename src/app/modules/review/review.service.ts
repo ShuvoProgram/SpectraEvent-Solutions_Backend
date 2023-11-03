@@ -3,6 +3,7 @@ import prisma from "../../../utils/prisma";
 
 const createReview = async (data: Review, userIds: string): Promise<Review> => {
   const {userId, eventId, comment, rating} = data;
+
   const result = await prisma.review.create({
     data: {
       userId: userIds,
