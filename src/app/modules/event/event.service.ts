@@ -111,8 +111,11 @@ const getAllEvents = async (
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
         : {
-          // createdAt: 'desc',
+          createdAt: 'desc',
         },
+        include: {
+          Review: true
+        }
   });
   const total = await prisma.event.count({
     where: whereConditions,

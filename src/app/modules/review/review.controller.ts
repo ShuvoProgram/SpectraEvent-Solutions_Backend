@@ -5,8 +5,9 @@ import sendResponse from "../../../utils/sendResponse";
 import httpStatus from "http-status";
 
 const createReview = catchAsync(async (req: Request, res: Response) => {
+  const userId = req?.user?.userId;
   const {...reviewData} = req.body;
-  const result = await ReviewService.createReview(reviewData);
+  const result = await ReviewService.createReview(reviewData, userId);
 
   sendResponse(res, {
     success: true,

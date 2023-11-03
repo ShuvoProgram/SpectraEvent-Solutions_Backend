@@ -141,9 +141,9 @@ model Booking {
 
 model Review {
     id        String   @id @default(uuid())
-    userId    String   @unique
-    eventId   String   @unique
-    rating    String
+    userId    String 
+    eventId   String 
+    rating    Int
     comment   String
     user      User     @relation(fields: [userId], references: [id])
     event     Event    @relation(fields: [eventId], references: [id])
