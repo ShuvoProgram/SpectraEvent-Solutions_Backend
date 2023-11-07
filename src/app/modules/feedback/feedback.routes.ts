@@ -5,7 +5,7 @@ import { FeedbackController } from './feedback.controller';
 
 const router = express.Router();
 
-router.post('/create-feedback',
+router.post('/',
 validateRequest(FeedbackValidation.createFeedbackZodSchema),
 FeedbackController.createFeedback
 );

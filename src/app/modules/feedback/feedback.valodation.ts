@@ -19,12 +19,18 @@ const createFeedbackZodSchema = z.object({
 
 const updateFeedbackZodSchema = z.object({
     body: z.object({
-        comment: z.string({
-            required_error: "Please enter a comment",
-        }),
-        suggestions: z.string({
-            required_error: "Please enter a suggestions",
-        })
+        name: z.string({
+            required_error: "Please enter a your name",
+        }).optional(),
+        email: z.string({
+            required_error: "Please enter your email",
+        }).optional(),
+        message: z.string({
+            required_error: "Please enter a message",
+        }).optional(),
+        isPublished: z.boolean({
+            required_error: "Please enter a published"
+        }).optional()
     })
 })
 

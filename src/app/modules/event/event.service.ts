@@ -173,8 +173,8 @@ const deleteEvent = async (id: string): Promise<{ event: Event; favorite: Favori
   // Check if a favorite exists for this event
   const favorite = await prisma.favorite.findUnique({
     where: {
-      eventId: id,
-    },
+      eventId: id
+    }
   });
 
   const eventDeleteAction = await prisma.$transaction(async (transactionClient) => {
