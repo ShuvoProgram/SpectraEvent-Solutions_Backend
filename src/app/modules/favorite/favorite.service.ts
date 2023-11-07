@@ -28,9 +28,9 @@ const addFavorite = async (payload: string, userId: string): Promise<Favorite | 
   return result;
 }
 
-const updateFavorite = async (userId: string, payload: Partial<IFavorite>) => {
+const updateFavorite = async (id: string, payload: Partial<IFavorite>) => {
   return await prisma.favorite.update({
-    where: { userId },
+    where: {id},
     data: payload,
     include: {
       user: true,

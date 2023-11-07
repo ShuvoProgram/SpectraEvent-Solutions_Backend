@@ -135,6 +135,79 @@ const getAllBooking = async (
   };
 };
 
+const getAllBookingForUser = async (
+  filters: IEventFilterRequest,
+  options: IPaginationOptions,
+  userId: string
+): Promise<Booking[] | any> => {
+  const { limit, page, skip } = paginationHelpers.calculatePagination(options);
+  const { searchTerm, ...filterData } = filters;
+
+  const andConditions = [];
+
+  if (searchTerm) {
+    andConditions.push({
+      OR: bookingFieldSearchableFields.map(field => ({
+        [field]: {
+          contains: searchTerm,
+          mode: 'insensitive',
+        },
+      })),
+    });
+  }
+
+  if (Object.keys(filterData).length > 0) {
+    andConditions.push({
+      AND: Object.keys(filterData).map(key => {
+        if (bookingRelationFields.includes(key)) {
+          return {
+            [bookingRelationalFieldsMapper[key]]: {
+              id: (filterData as any)[key],
+            },
+          };
+        } else {
+          return {
+            [key]: {
+              equals: (filterData as any)[key],
+            },
+          };
+        }
+      }),
+    });
+  }
+
+  const whereConditions: Prisma.BookingWhereInput =
+    andConditions.length > 0 && {userId: userId} ? { AND: andConditions } : {};
+
+  const result = await prisma.booking.findMany({
+    include: {
+      user: true,
+      Event: true,
+    },
+    where: whereConditions,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : {
+          createdAt: 'desc',
+        },
+  });
+  const total = await prisma.booking.count({
+    where: whereConditions,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
+};
+
 const getSingleBooking = async (id: string): Promise<Booking | null> => {
   const result = await prisma.booking.findUnique({
     where: {
@@ -274,57 +347,6 @@ const confirmBooking = async (bookingId: string): Promise<any> => {
   return confirmBooking;
 }
 
-// const completedBooking = async (bookingId: string): Promise<any> => {
-//   const booking = await prisma.booking.findUnique({
-//     where: {
-//       id: bookingId,
-//     },
-//   });
-
-//   if (!booking) {
-//     throw new Error('Booking does not exist');
-//   }
-
-//   if (booking.status === 'cancelled') {
-//     throw new Error('Booking has cancelled');
-//   }
-
-//   if (booking.status === 'confirmed') {
-//     throw new Error('Booking been confirmed');
-//   }
-
-//   if (booking.status === 'complete') {
-//     throw new Error('Booking has already been completed');
-//   }
-
-//   const completedBooking = await prisma.$transaction(
-//     async transactionClient => {
-//       const bookingToConfirm = await transactionClient.booking.update({
-//         where: {
-//           id: bookingId,
-//         },
-//         data: {
-//           status: 'complete',
-//         },
-//       });
-//       await transactionClient.payment.update({
-//         where: {
-//           bookingId,
-//         },
-//         data: {
-//           paymentStatus: 'complete',
-//         },
-//       });
-
-//       return {
-//         booking: bookingToConfirm,
-//       };
-//     }
-//   );
-
-//   return completedBooking;
-// };
-
 export const BookingService = {
   createBooking,
   getAllBooking,
@@ -333,5 +355,6 @@ export const BookingService = {
   deleteBooking,
   cancelBooking,
   confirmBooking,
+  getAllBookingForUser
   // completedBooking
 };

@@ -8,7 +8,7 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 const app: Application = express();
 
 const corsOption = {
-  origin: 'https://spectraevent-solutionsfrontend-production.up.railway.app/',
+  origin: 'http://localhost:3000',
   credentials: true
 }
 

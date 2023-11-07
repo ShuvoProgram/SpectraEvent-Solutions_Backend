@@ -20,13 +20,12 @@ const createBlogs = async (data: Blog, userId: string): Promise<Blog> => {
   if (alreadyExist) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Blog already exists')
   };
-  let { title, content, contentType, adminId, image, date } = data;
+  let { title, content, contentType, adminId, image } = data;
   adminId = userId;
   const result = await prisma.blog.create({
     data: {
       title,
       content,
-      date,
       image,
       contentType
     },

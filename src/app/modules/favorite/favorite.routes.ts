@@ -7,7 +7,9 @@ import { FavoriteController } from './favorite.controller';
 
 const router = express.Router();
 
-router.post('/', auth(ENUM_USER_ROLE.CUSTOMER), validateRequest(FavoriteValidation.createFavoriteZodSchema), FavoriteController.addFavorite);
+router.post('/', auth(ENUM_USER_ROLE.CUSTOMER), 
+// validateRequest(FavoriteValidation.createFavoriteZodSchema),
+ FavoriteController.addFavorite);
 
 router.delete('/:id', FavoriteController.removeFavorite);
 

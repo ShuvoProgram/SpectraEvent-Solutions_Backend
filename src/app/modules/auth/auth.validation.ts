@@ -12,9 +12,7 @@ const createUserZodSchema = z.object({
     email: z.string({
       required_error: "Email is required"
     }),
-    password: z.string({
-      required_error: "Password is required"
-    }),
+    password: z.string().min(6, { message: 'Password too short' }),
     role: z.enum([...role] as [string, ...string[]]).optional(),
   })
 })

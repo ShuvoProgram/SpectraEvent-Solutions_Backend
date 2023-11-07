@@ -2,15 +2,18 @@ import {z} from 'zod';
 
 const createFeedbackZodSchema = z.object({
     body: z.object({
-        userId: z.string({
-            required_error: "Please enter a user ID",
+        name: z.string({
+            required_error: "Please enter a your name",
         }),
-        comment: z.string({
-            required_error: "Please enter a comment",
+        email: z.string({
+            required_error: "Please enter your email",
         }),
-        suggestions: z.string({
-            required_error: "Please enter a suggestions",
-        })
+        message: z.string({
+            required_error: "Please enter a message",
+        }),
+        isPublished: z.boolean({
+            required_error: "Please enter a published"
+        }).optional()
     })
 })
 

@@ -14,9 +14,10 @@ router.post(
   BookingController.createBooking
 );
 router.get('/', auth(ENUM_USER_ROLE.ADMIN), BookingController.getAllBooking);
+router.get('/user', auth(ENUM_USER_ROLE.CUSTOMER), BookingController.getAllBookingForUser);
 router.get(
   '/:id',
-  auth(ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.CUSTOMER),
   BookingController.getSingleBooking
 );
 router.patch(
