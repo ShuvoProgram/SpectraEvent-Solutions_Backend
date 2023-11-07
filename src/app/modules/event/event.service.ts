@@ -159,48 +159,13 @@ const updateEvent = async (
   return result;
 };
 
-const deleteEvent = async (id: string): Promise<{ event: Event; favorite: Favorite | null }> => {
-  const event = await prisma.event.findUnique({
+const deleteEvent = async (id: string): Promise< Event | null > => {
+  const result = await prisma.event.delete({
     where: {
-      id: id,
+      id,
     },
   });
-
-  if (!event) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Event not found");
-  }
-
-  // Check if a favorite exists for this event
-  const favorite = await prisma.favorite.findUnique({
-    where: {
-      eventId: id
-    }
-  });
-
-  const eventDeleteAction = await prisma.$transaction(async (transactionClient) => {
-    if (favorite) {
-      // Delete the favorite if it exists
-      await transactionClient.favorite.delete({
-        where: {
-          eventId: id,
-        },
-      });
-    }
-
-    // Delete the event
-    const eventDelete = await transactionClient.event.delete({
-      where: {
-        id: id,
-      },
-    });
-
-    return {
-      event: eventDelete,
-      favorite: favorite, // You can return the favorite even if it was not found
-    };
-  });
-
-  return eventDeleteAction;
+  return result;
 };
 
 
