@@ -8,11 +8,11 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 const app: Application = express();
 
 const corsOption = {
-  origin: 'https://spectraeventsolutions.up.railway.app/',
+  origin: true,
   credentials: true
 }
 
-app.use(cors(corsOption));
+app.use('*', cors(corsOption));
 app.use(cookieParser());
 
 app.use(express.json());
