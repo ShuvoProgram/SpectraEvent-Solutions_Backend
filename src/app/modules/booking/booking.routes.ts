@@ -22,13 +22,13 @@ router.get(
 );
 router.patch(
   '/:id',
-  validateRequest(BookingValidation.updateBookingZodSchema),
+  // validateRequest(BookingValidation.updateBookingZodSchema),
   auth(ENUM_USER_ROLE.ADMIN),
   BookingController.updateBooking
 );
 router.patch(
   '/cancel-booking/:id',
-  validateRequest(BookingValidation.updateBookingZodSchema),
+  // validateRequest(BookingValidation.updateBookingZodSchema),
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.CUSTOMER),
   BookingController.cancelBooking
 );

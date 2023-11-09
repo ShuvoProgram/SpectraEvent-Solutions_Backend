@@ -285,7 +285,7 @@ const cancelBooking = async (bookingId: string): Promise<any> => {
           id: booking.eventId,
         },
         data: {
-          isBooked: event?.isBooked === false
+          isBooked: false
         },
       });
 

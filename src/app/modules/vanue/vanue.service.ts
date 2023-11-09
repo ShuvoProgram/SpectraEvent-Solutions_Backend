@@ -9,11 +9,10 @@ import { vanueFieldSearchableFields } from "./vanue.constant";
 
 const createVanue = async (data: Vanue, Id: string): Promise<Vanue> => {
 
-  data.adminId = Id
   const result = await prisma.vanue.create({
     data: {
         title: data.title,
-        adminId: data.adminId,
+        adminId: Id,
     },
   });
   return result;
