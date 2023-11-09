@@ -13,7 +13,7 @@ router.get('/:id', VanueController.getSingleVanue);
 
 router.post(
   '/',
-  validateRequest(VanueValidation.createVanueZodSchema),
+  // validateRequest(VanueValidation.createVanueZodSchema),
   auth(ENUM_USER_ROLE.ADMIN),
  VanueController.createVanue
 );
@@ -21,7 +21,7 @@ router.post(
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.ADMIN),
-  validateRequest(VanueValidation.updateVanueZodSchema),
+  // validateRequest(VanueValidation.updateVanueZodSchema),
   VanueController.updateVanue
 );
 router.delete('/:id', auth(ENUM_USER_ROLE.ADMIN), VanueController.deleteVanue);

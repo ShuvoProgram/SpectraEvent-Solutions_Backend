@@ -13,7 +13,7 @@ router.get('/:id', FaqController.getSingleFaq);
 
 router.post(
   '/',
-  validateRequest(FaqValidation.createFaqZodSchema),
+  // validateRequest(FaqValidation.createFaqZodSchema),
   auth(ENUM_USER_ROLE.ADMIN),
   FaqController.createFaq
 );
@@ -21,7 +21,7 @@ router.post(
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.ADMIN),
-  validateRequest(FaqValidation.updateFaqZodSchema),
+  // validateRequest(FaqValidation.updateFaqZodSchema),
   FaqController.updateFaq
 );
 router.delete('/:id', auth(ENUM_USER_ROLE.ADMIN), FaqController.deleteFaq);

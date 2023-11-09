@@ -19,7 +19,7 @@ router.get(
 
 router.post(
   '/',
-  validateRequest(CategoryValidation.createCategoryZodSchema),
+  // validateRequest(CategoryValidation.createCategoryZodSchema),
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   CategoryController.createOrganize
 );
@@ -27,7 +27,7 @@ router.post(
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  validateRequest(CategoryValidation.updateCategoryZodSchema),
+  // validateRequest(CategoryValidation.updateCategoryZodSchema),
   CategoryController.updateOrganize
 );
 

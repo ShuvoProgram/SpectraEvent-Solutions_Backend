@@ -6,13 +6,15 @@ import { FeedbackController } from './feedback.controller';
 const router = express.Router();
 
 router.post('/',
-validateRequest(FeedbackValidation.createFeedbackZodSchema),
+// validateRequest(FeedbackValidation.createFeedbackZodSchema),
 FeedbackController.createFeedback
 );
 
 router.get('/:id', FeedbackController.getFeedback);
 
-router.patch('/:id', validateRequest(FeedbackValidation.updateFeedbackZodSchema), FeedbackController.updateFeedback);
+router.patch('/:id', 
+// validateRequest(FeedbackValidation.updateFeedbackZodSchema),
+FeedbackController.updateFeedback);
 
 router.delete('/:id', FeedbackController.deleteFeedback);
 
