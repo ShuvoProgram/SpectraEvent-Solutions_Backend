@@ -181,8 +181,8 @@ model Blog {
     image       String
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
-    Admin       Admin?   @relation(fields: [adminId], references: [id])
-    adminId     String?
+    admin       Admin   @relation(fields: [adminId], references: [id])
+    adminId     String
     review      Review[]
 
     @@map("blogs")

@@ -7,9 +7,13 @@ import { EventValidation } from './event.validation';
 
 const router = express.Router();
 
-router.post('/', validateRequest(EventValidation.createEventZodSchema), auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN), EventController.createEvent);
+router.post('/', 
+// validateRequest(EventValidation.createEventZodSchema),
+auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN), EventController.createEvent);
 
-router.patch('/:id', validateRequest(EventValidation.updateEventZodSchema), auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN), EventController.updateEvent);
+router.patch('/:id', 
+// validateRequest(EventValidation.updateEventZodSchema),
+auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN), EventController.updateEvent);
 
 router.get('/', EventController.getAllEvents);
 

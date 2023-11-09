@@ -21,14 +21,14 @@ router.get(
 );
 router.get(
   '/:id',
-  // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   UserController.getSingleUser
 );
 
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  validateRequest(UserValidation.updateUpdateZodSchema),
+  // validateRequest(UserValidation.updateUpdateZodSchema),
   UserController.updateUser
 );
 router.delete(

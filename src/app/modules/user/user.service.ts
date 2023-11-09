@@ -86,15 +86,8 @@ const getMyProfile = async (userId: string, userRole: string): Promise<User | nu
 
 const updateMyProfile = async (
   userId: string,
-  userRole: string,
   payload: Partial<User>
 ): Promise<User | null> => {
-  // const user = await prisma.user.findFirst({
-  //   where: {
-  //     id: userId,
-  //     role: userRole
-  //   }
-  // })
   const { firstName, middleName, lastName, profileImage, contactNo, dateOfBirth, bio, gender, bloodGroup, address } = payload;
 
   const result = await prisma.user.update({

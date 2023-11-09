@@ -15,7 +15,9 @@ router.post('/',
 //  validateRequest(BlogValidation.createBlogZodSchema), 
  auth(ENUM_USER_ROLE.ADMIN), BlogController.createBlog);
 
-router.patch('/:id', auth(ENUM_USER_ROLE.ADMIN), validateRequest(BlogValidation.updateBlogZodSchema), BlogController.updateBlog);
+router.patch('/:id', auth(ENUM_USER_ROLE.ADMIN),
+//  validateRequest(BlogValidation.updateBlogZodSchema),
+  BlogController.updateBlog);
 
 router.delete('/:id', auth(ENUM_USER_ROLE.ADMIN), BlogController.deleteBlog);
 

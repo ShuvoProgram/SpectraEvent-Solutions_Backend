@@ -27,9 +27,11 @@ const createBlogs = async (data: Blog, userId: string): Promise<Blog> => {
       title,
       content,
       image,
-      contentType
+      contentType,
+      adminId
     },
     include: {
+      admin: true,
       review: true
     },
   });
@@ -100,8 +102,8 @@ const getSingleBlog = async (id: string): Promise<Blog | null> => {
       id,
     },
     include: {
+      admin: true,
       review: true,
-      Admin: true
     },
   });
   return result;

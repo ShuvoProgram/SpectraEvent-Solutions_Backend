@@ -150,11 +150,28 @@ const updateEvent = async (
   id: string,
   event: Event
 ): Promise<Event> => {
+  let { title, CategoryId, isBooked, description, facility, vanueId, price, people, eventImg, adminId, isComingSoon } = event;
   const result = await prisma.event.update({
     where: {
       id: id,
     },
-    data: event,
+    data: {
+      title,
+      CategoryId,
+      isBooked,
+      isComingSoon,
+      description,
+      facility,
+      vanueId,
+      price,
+      people,
+      eventImg,
+      adminId
+    },
+    include: {
+      Category: true,
+      Vanue: true   
+    }
   });
   return result;
 };

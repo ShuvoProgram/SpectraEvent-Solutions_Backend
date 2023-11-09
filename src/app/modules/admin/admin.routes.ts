@@ -9,8 +9,8 @@ const router = express.Router();
 
 router.post(
   "/create-admin",
-  // validateRequest(AdminValidation.createAdminZodSchema),
-  // auth(ENUM_USER_ROLE.SUPER_ADMIN),
+  validateRequest(AdminValidation.createAdminZodSchema),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN),
   AdminController.createAdmin
 );
 
@@ -34,14 +34,14 @@ router.get(
 );
 router.get(
   '/:id',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN),
+  // auth(ENUM_USER_ROLE.SUPER_ADMIN),
   AdminController.getSingleAdmin
 );
 
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  validateRequest(AdminValidation.updateAdminZodSchema),
+  // validateRequest(AdminValidation.updateAdminZodSchema),
   AdminController.updateAdmin
 );
 
